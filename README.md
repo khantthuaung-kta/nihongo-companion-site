@@ -7,6 +7,7 @@ A Japanese dictionary and translation workspace for Burmese-speaking learners, w
 - Look up Japanese words and kanji with Jotoba and read the original English definitions.
 - Translate short passages between Japanese and Burmese through MyMemory.
 - Save dictionary results as flashcards and review them in the same browser.
+- Open the Study menu for a Hiragana/Katakana chart, a romaji quiz, Japanese text-to-speech, and browser-local notes. Japanese audio depends on the voices available on your device.
 
 ## Run locally
 

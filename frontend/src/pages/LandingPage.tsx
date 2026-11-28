@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { LookupTools, type Language } from "./LookupTools";
+import StudyTools from "./StudyTools";
 
 const languages = { my: "မြန်မာ", en: "English", ja: "日本語", th: "ไทย" };
 const subtitles = {
@@ -11,6 +12,7 @@ const subtitles = {
 
 export default function LandingPage() {
   const [language, setLanguage] = useState<Language>("my");
+  const [study, setStudy] = useState(false);
   useEffect(() => { document.documentElement.lang = language; }, [language]);
 
   return (
@@ -28,7 +30,12 @@ export default function LandingPage() {
         <div className="study-hero">
           <h1>{subtitles[language]}</h1>
         </div>
-        <LookupTools language={language} />
+        <nav className="tool-menu" aria-label="Nihongo Companion">
+          <button aria-pressed={!study} onClick={() => setStudy(false)}>辞書 · Dictionary</button>
+          <button aria-pressed={study} onClick={() => setStudy(true)}>学習 · လေ့လာရေး</button>
+        </nav>
+        <div hidden={study}><LookupTools language={language} /></div>
+        <div hidden={!study} lang="my"><StudyTools /></div>
       </main>
     </>
   );
