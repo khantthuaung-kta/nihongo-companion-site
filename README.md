@@ -1,26 +1,46 @@
 # Nihongo Companion
 
-Nihongo Companion is a work-in-progress vocabulary companion for Burmese-speaking learners of Japanese. The goal is to make it easier to look up Japanese words, understand their meanings in Burmese, and review them later.
+A lightweight Japanese vocabulary companion with Burmese, English, Japanese, and Thai interfaces. It works entirely in the browser, so it is fast, private, and free to host as a static site.
 
-## Project status
+## Features
 
-This repository contains the React landing page, FastAPI health endpoints, and the initial PostgreSQL schema. Dictionary search, Burmese translations, and flashcard review are planned.
+- Search by kanji, kana, romaji, or translated meaning
+- Filter words by everyday life, travel, food, and study
+- Save vocabulary for later review (stored in the browser)
+- Switch instantly between မြန်မာ, English, 日本語, and ไทย
+- Responsive Japanese-inspired interface for phones and desktops
 
-## Tech stack
+## Run locally
 
-| Layer | Tools |
-| --- | --- |
-| Frontend | React, TypeScript, Vite, Tailwind CSS |
-| Backend | Python, FastAPI, SQLAlchemy |
-| Database | PostgreSQL, Alembic |
-
-## Run the frontend
+Requires Node.js 20 or newer.
 
 ```bash
-git clone https://github.com/khantthuaung-kta/nihongo-companion-site.git
-cd nihongo-companion-site/frontend
-npm install
+cd frontend
+npm ci
 npm run dev
 ```
 
-Open http://localhost:5173. The landing page runs without a backend. The API and database code live in `backend/`.
+Open <http://localhost:5173>.
+
+## Check a change
+
+```bash
+cd frontend
+npm test
+npm run build
+```
+
+## Free hosting with GitHub Pages
+
+The included GitHub Actions workflow tests, builds, and publishes the site without Docker, a server, or a paid platform.
+
+1. Push this repository to GitHub.
+2. Open **Settings → Pages**.
+3. Under **Build and deployment**, select **GitHub Actions** as the source.
+4. Push to `main`, or run **Deploy to GitHub Pages** manually from the Actions tab.
+
+The site uses relative asset paths, so it also works on other free static hosts such as Netlify or Render Static Sites. Use `frontend` as the base directory, `npm run build` as the build command, and `dist` as the publish directory.
+
+## Architecture
+
+This project deliberately has no backend, database, Docker image, API keys, or runtime environment variables. Vocabulary ships with the frontend and saved words remain in each visitor's local storage.
