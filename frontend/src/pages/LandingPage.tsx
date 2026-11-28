@@ -1,41 +1,35 @@
-import React from "react";
-import { Flashcards, LookupTools } from "./LookupTools";
+import { useEffect, useState } from "react";
+import { LookupTools, type Language } from "./LookupTools";
 
-type Language = "my" | "en" | "ja" | "th";
-type Category = "all" | "daily" | "travel" | "food" | "study";
-interface Word { id:number; kanji:string; reading:string; romaji:string; category:Exclude<Category,"all">; meaning:Record<Language,string>; example:string; exampleReading:string; exampleMeaning:Record<Language,string>; }
+const languages = { my: "မြန်မာ", en: "English", ja: "日本語", th: "ไทย" };
+const subtitles = {
+  my: "ဂျပန်အဘိဓာန်နှင့် မြန်မာဘာသာပြန်",
+  en: "Japanese dictionary & Burmese translation",
+  ja: "日本語辞書とミャンマー語翻訳",
+  th: "พจนานุกรมญี่ปุ่นและแปลภาษาพม่า",
+};
 
-const copy = {
-  my:{label:"မြန်မာ",eyebrow:"နေ့တိုင်း ဂျပန်စာ တစ်လုံးစီ",title:"စကားလုံးလေးတွေကနေ ဂျပန်နဲ့ ပိုနီးကပ်လာမယ်။",intro:"အသံထွက်၊ အဓိပ္ပာယ်နဲ့ ဥပမာစာကြောင်းတွေကို လွယ်လွယ်ကူကူ လေ့လာပြီး ကြိုက်နှစ်သက်ရာတွေကို ပြန်လေ့ကျင့်ပါ။",search:"စကားလုံး၊ အသံထွက် သို့မဟုတ် အဓိပ္ပာယ်ရှာပါ",words:"စကားလုံးများ",saved:"သိမ်းထားသည်",all:"အားလုံး",daily:"နေ့စဉ်",travel:"ခရီးသွား",food:"အစားအသောက်",study:"စာလေ့လာ",empty:"ကိုက်ညီတဲ့ စကားလုံး မတွေ့ပါ",example:"ဥပမာ",save:"သိမ်းမည်",remove:"ဖယ်မည်",footer:"ဂျပန်စာလေ့လာခြင်းကို နေ့စဉ်အလေ့အကျင့်တစ်ခု ဖြစ်စေပါ။"},
-  en:{label:"English",eyebrow:"One Japanese word a day",title:"A little closer to Japan, one word at a time.",intro:"Learn naturally with readings, clear meanings and useful example sentences. Save the words you want to revisit.",search:"Search a word, reading, or meaning",words:"Word collection",saved:"Saved",all:"All",daily:"Daily life",travel:"Travel",food:"Food",study:"Study",empty:"No matching words found",example:"Example",save:"Save",remove:"Remove",footer:"Make Japanese a gentle part of every day."},
-  ja:{label:"日本語",eyebrow:"一日一語、やさしい日本語",title:"ひとつの言葉から、日本がもっと近くなる。",intro:"読み方、意味、自然な例文で楽しく学びましょう。覚えたい言葉は保存して、いつでも復習できます。",search:"言葉・読み方・意味を検索",words:"言葉のコレクション",saved:"保存した言葉",all:"すべて",daily:"暮らし",travel:"旅行",food:"食べ物",study:"勉強",empty:"言葉が見つかりませんでした",example:"例文",save:"保存",remove:"削除",footer:"日本語を、毎日のやさしい習慣に。"},
-  th:{label:"ไทย",eyebrow:"ภาษาญี่ปุ่นวันละคำ",title:"ใกล้ญี่ปุ่นขึ้นอีกนิด ผ่านคำศัพท์ทีละคำ",intro:"เรียนรู้อย่างเป็นธรรมชาติด้วยคำอ่าน ความหมาย และประโยคตัวอย่าง บันทึกคำที่อยากกลับมาทบทวนได้เสมอ",search:"ค้นหาคำศัพท์ คำอ่าน หรือความหมาย",words:"คลังคำศัพท์",saved:"บันทึกแล้ว",all:"ทั้งหมด",daily:"ชีวิตประจำวัน",travel:"ท่องเที่ยว",food:"อาหาร",study:"การเรียน",empty:"ไม่พบคำศัพท์ที่ตรงกัน",example:"ตัวอย่าง",save:"บันทึก",remove:"นำออก",footer:"ให้ภาษาญี่ปุ่นเป็นส่วนหนึ่งของทุกวัน"}
-} satisfies Record<Language,Record<string,string>>;
+export default function LandingPage() {
+  const [language, setLanguage] = useState<Language>("my");
+  useEffect(() => { document.documentElement.lang = language; }, [language]);
 
-const words:Word[] = [
-  {id:1,kanji:"木漏れ日",reading:"こもれび",romaji:"komorebi",category:"daily",meaning:{my:"သစ်ရွက်ကြားမှ ထိုးဆင်းလာသော နေရောင်",en:"sunlight filtering through leaves",ja:"木の葉の間から差し込む日光",th:"แสงแดดที่ลอดผ่านใบไม้"},example:"木漏れ日の下を歩きました。",exampleReading:"こもれびの したを あるきました。",exampleMeaning:{my:"သစ်ရွက်ကြားနေရောင်အောက်မှာ လမ်းလျှောက်ခဲ့တယ်။",en:"I walked beneath the sunlight filtering through the leaves.",ja:"木の葉から差す光の下を歩きました。",th:"ฉันเดินใต้แสงแดดที่ลอดผ่านใบไม้"}},
-  {id:2,kanji:"いただきます",reading:"いただきます",romaji:"itadakimasu",category:"food",meaning:{my:"စားစရာအတွက် ကျေးဇူးတင်စွာ စားပါမယ်",en:"said gratefully before eating",ja:"食事の前に感謝を表す言葉",th:"คำกล่าวขอบคุณก่อนรับประทานอาหาร"},example:"みんなで「いただきます」と言いました。",exampleReading:"みんなで「いただきます」と いいました。",exampleMeaning:{my:"အားလုံးအတူ “စားပါမယ်” လို့ ပြောခဲ့တယ်။",en:"We all said “itadakimasu” together.",ja:"みんなで食事前の挨拶をしました。",th:"ทุกคนกล่าว “อิตาดาคิมัส” พร้อมกัน"}},
-  {id:3,kanji:"道",reading:"みち",romaji:"michi",category:"travel",meaning:{my:"လမ်း၊ ခရီးလမ်း",en:"road; path; way",ja:"人や車が通るところ",th:"ถนน; เส้นทาง"},example:"この道をまっすぐ行ってください。",exampleReading:"この みちを まっすぐ いってください。",exampleMeaning:{my:"ဒီလမ်းအတိုင်း တည့်တည့်သွားပါ။",en:"Please go straight along this road.",ja:"この道路を直進してください。",th:"กรุณาตรงไปตามถนนเส้นนี้"}},
-  {id:4,kanji:"復習",reading:"ふくしゅう",romaji:"fukushū",category:"study",meaning:{my:"ပြန်လည်လေ့ကျင့်ခြင်း၊ စာပြန်နွှေးခြင်း",en:"review; revision",ja:"学んだことをもう一度勉強すること",th:"การทบทวนบทเรียน"},example:"寝る前に新しい言葉を復習します。",exampleReading:"ねる まえに あたらしい ことばを ふくしゅうします。",exampleMeaning:{my:"မအိပ်ခင် စကားလုံးအသစ်တွေကို ပြန်လေ့ကျင့်တယ်။",en:"I review new words before bed.",ja:"就寝前に新しい語彙を見直します。",th:"ฉันทบทวนคำศัพท์ใหม่ก่อนนอน"}},
-  {id:5,kanji:"おかえり",reading:"おかえり",romaji:"okaeri",category:"daily",meaning:{my:"ပြန်လာတာ ကြိုဆိုပါတယ်",en:"welcome home",ja:"帰ってきた人への挨拶",th:"ยินดีต้อนรับกลับบ้าน"},example:"おかえり、今日はどうだった？",exampleReading:"おかえり、きょうは どうだった？",exampleMeaning:{my:"ပြန်လာပြီလား၊ ဒီနေ့ ဘယ်လိုလဲ။",en:"Welcome home—how was your day?",ja:"帰宅した人に今日の様子を聞いています。",th:"กลับมาแล้วเหรอ วันนี้เป็นอย่างไรบ้าง"}},
-  {id:6,kanji:"美味しい",reading:"おいしい",romaji:"oishii",category:"food",meaning:{my:"အရသာရှိသော",en:"delicious; tasty",ja:"味が良い",th:"อร่อย"},example:"このお茶はとても美味しいです。",exampleReading:"この おちゃは とても おいしいです。",exampleMeaning:{my:"ဒီလက်ဖက်ရည်က အရမ်းအရသာရှိတယ်။",en:"This tea is very delicious.",ja:"このお茶は味がとても良いです。",th:"ชานี้อร่อยมาก"}}
-];
-const categories:Category[]=["all","daily","travel","food","study"];
-function readSaved():number[]{try{return JSON.parse(localStorage.getItem("nihongo-saved")??"[]") as number[];}catch{return[];}}
-
-export default function LandingPage(){
-  const [language,setLanguage]=React.useState<Language>("my"); const [category,setCategory]=React.useState<Category>("all"); const [query,setQuery]=React.useState(""); const [savedOnly,setSavedOnly]=React.useState(false); const [saved,setSaved]=React.useState<number[]>(readSaved); const t=copy[language];
-  React.useEffect(()=>{document.documentElement.lang=language;localStorage.setItem("nihongo-saved",JSON.stringify(saved));},[language,saved]);
-  const visibleWords=words.filter(word=>{const needle=query.trim().toLocaleLowerCase();const matches=!needle||[word.kanji,word.reading,word.romaji,...Object.values(word.meaning)].some(value=>value.toLocaleLowerCase().includes(needle));return matches&&(category==="all"||word.category===category)&&(!savedOnly||saved.includes(word.id));});
-  const toggleSaved=(id:number)=>setSaved(current=>current.includes(id)?current.filter(item=>item!==id):[...current,id]);
-  return <main>
-    <header className="site-header"><a className="brand" href="#top" aria-label="Nihongo Companion home"><span className="brand-mark">日</span><span>Nihongo<br/><b>Companion</b></span></a><label className="language-picker"><span className="sr-only">Language</span><select value={language} onChange={event=>setLanguage(event.target.value as Language)}>{(Object.keys(copy) as Language[]).map(key=><option key={key} value={key}>{copy[key].label}</option>)}</select></label></header>
-    <section className="hero" id="top"><div className="sun" aria-hidden="true"/><div className="hero-copy"><p className="eyebrow">{t.eyebrow}</p><h1>{t.title}</h1><p className="intro">{t.intro}</p></div><div className="hero-kanji" aria-hidden="true"><span>言</span><small>ことば</small></div><div className="wave" aria-hidden="true"/></section>
-    <LookupTools language={language} />
-    <section className="library" aria-labelledby="library-title"><div className="section-heading"><div><p className="kicker">言葉帳 · KOTOBA NOTE</p><h2 id="library-title">{t.words}</h2></div><button className={`saved-filter ${savedOnly?"active":""}`} onClick={()=>setSavedOnly(value=>!value)} aria-pressed={savedOnly}><span>♡</span>{t.saved}<b>{saved.length}</b></button></div>
-      <div className="search-wrap"><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} placeholder={t.search} aria-label={t.search}/></div><div className="filters" aria-label="Categories">{categories.map(item=><button key={item} className={category===item?"active":""} onClick={()=>setCategory(item)}>{t[item]}</button>)}</div>
-      {visibleWords.length?<div className="word-grid">{visibleWords.map(word=>{const isSaved=saved.includes(word.id);return <article className="word-card" key={word.id}><div className="card-top"><span className="category-tag">{t[word.category]}</span><button className={`heart ${isSaved?"active":""}`} onClick={()=>toggleSaved(word.id)} aria-label={isSaved?t.remove:t.save} aria-pressed={isSaved}>♥</button></div><div className="word-title"><div><h3>{word.kanji}</h3><p>{word.reading}</p></div><span>{word.romaji}</span></div><p className="meaning">{word.meaning[language]}</p><div className="example"><small>{t.example}</small><p lang="ja">{word.example}</p><em>{word.exampleReading}</em><p>{word.exampleMeaning[language]}</p></div></article>;})}</div>:<div className="empty"><span>々</span><p>{t.empty}</p></div>}
-      <Flashcards language={language} words={words.filter(word => saved.includes(word.id))} />
-    </section><footer><span className="footer-mark">日</span><p>{t.footer}</p><small>Made for curious learners · 2026</small></footer>
-  </main>;
+  return (
+    <>
+      <header className="site-header">
+        <a className="brand" href="#top"><span className="brand-mark" lang="ja">日</span><b>Nihongo Companion</b></a>
+        <label className="language-picker">
+          <span className="sr-only">Language</span>
+          <select value={language} onChange={event => setLanguage(event.target.value as Language)}>
+            {Object.entries(languages).map(([code, label]) => <option key={code} value={code} lang={code}>{label}</option>)}
+          </select>
+        </label>
+      </header>
+      <main id="top">
+        <div className="study-hero">
+          <h1>{subtitles[language]}</h1>
+        </div>
+        <LookupTools language={language} />
+      </main>
+    </>
+  );
 }

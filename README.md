@@ -1,18 +1,13 @@
 # Nihongo Companion
 
-A lightweight Japanese vocabulary companion with Burmese, English, Japanese, and Thai interfaces. It works entirely in the browser, so it is fast, private, and free to host as a static site.
+A Japanese dictionary and translation workspace for Burmese-speaking learners, with Burmese, English, Japanese, and Thai interface options.
 
 ## Features
 
-- Live Japanese dictionary and kanji lookup with English definitions from Jotoba
-- Japanese ↔ Burmese machine translation through MyMemory
-- Flashcards for saved vocabulary
-
-- Search by kanji, kana, romaji, or translated meaning
-- Filter words by everyday life, travel, food, and study
-- Save vocabulary for later review (stored in the browser)
-- Switch instantly between မြန်မာ, English, 日本語, and ไทย
-- Responsive Japanese-inspired interface for phones and desktops
+- Look up Japanese words and kanji with Jotoba.
+- See an automatic Burmese translation of the first English gloss for each of the first five word matches, with the original dictionary senses below.
+- Translate short passages between Japanese and Burmese through MyMemory.
+- Save dictionary results as flashcards and review them in the same browser.
 
 ## Run locally
 
@@ -47,6 +42,6 @@ The site uses relative asset paths, so it also works on other free static hosts 
 
 ## Architecture
 
-The app runs on GitHub Pages without its own backend, database, Docker image, or API keys. The curated vocabulary and review cards work from bundled data. Saved words remain in each visitor's browser.
+The app runs on GitHub Pages without its own backend, database, Docker image, or API keys. Saved flashcards are stored in browser local storage.
 
-Live dictionary lookups send the submitted query to Jotoba. Translation sends submitted text to MyMemory, which has shared anonymous usage limits and a 500-byte request limit. These services require internet access. Machine translations can miss context, and dictionary definitions from Jotoba are in English.
+Live dictionary lookups send the submitted query to Jotoba. MyMemory receives the first English gloss of each displayed word and any text submitted to the translator. These services require internet access. MyMemory applies anonymous usage limits and a 500-byte request limit. English definitions remain available if Burmese translation fails. Machine-translated glosses can miss context or alternate meanings.
