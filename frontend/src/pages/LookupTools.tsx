@@ -24,10 +24,10 @@ const labels = {
 export type Language = keyof typeof labels;
 
 const studyLabels = {
-  my: ["မြန်မာအဓိပ္ပာယ်", "သိမ်းမယ်", "ဖယ်မယ်"],
-  en: ["Burmese meaning", "Save", "Remove"],
-  ja: ["ミャンマー語の意味", "保存", "削除"],
-  th: ["ความหมายภาษาพม่า", "บันทึก", "ลบ"],
+  my: ["သိမ်းမယ်", "ဖယ်မယ်"],
+  en: ["Save", "Remove"],
+  ja: ["保存", "削除"],
+  th: ["บันทึก", "ลบ"],
 } as const;
 
 const savedKey = "nihongo-saved-entries";
@@ -64,7 +64,6 @@ export function LookupTools({ language }: { language: Language }) {
   const t = labels[language];
   const study = studyLabels[language];
   const [saved, setSaved] = useState(readSaved);
-  const [meanings, setMeanings] = useState<Record<string, string | null>>({});
   const [query, setQuery] = useState("");
   const [dictionary, setDictionary] = useState<DictionaryResult>();
   const [lookupStatus, setLookupStatus] = useState<"idle" | "pending" | "error">("idle");
@@ -78,7 +77,6 @@ export function LookupTools({ language }: { language: Language }) {
     event.preventDefault();
     if (!query.trim() || lookupStatus === "pending") return;
     setDictionary(undefined);
-    setMeanings({});
     setLookupStatus("pending");
     try {
       const response = await fetch("https://jotoba.de/api/search/words", {
@@ -91,21 +89,6 @@ export function LookupTools({ language }: { language: Language }) {
       const result = await response.json() as DictionaryResult;
       if (!Array.isArray(result.words) || !Array.isArray(result.kanji)) throw new Error("Invalid dictionary response");
       setDictionary(result);
-      const entries = result.words.slice(0, 5).map(word => [
-        entryId(word.reading), word.senses[0]?.glosses[0] ?? "",
-      ] as const);
-      await Promise.all([...new Map(entries)].map(async ([id, gloss]) => {
-        let meaning: string | null = null;
-        try {
-          if (gloss && new TextEncoder().encode(gloss).length <= 500) {
-            const translated = await requestTranslation(gloss, "en|my");
-            if (/\p{Script=Myanmar}/u.test(translated)) meaning = translated;
-          }
-        } catch {
-          // Keep the English senses available if translation fails.
-        }
-        setMeanings(current => ({ ...current, [id]: meaning }));
-      }));
       setLookupStatus("idle");
     } catch {
       setLookupStatus("error");
@@ -149,22 +132,17 @@ export function LookupTools({ language }: { language: Language }) {
           {lookupStatus === "error" && <p>{t[7]}</p>}
           {dictionary && !dictionary.words.length && !dictionary.kanji.length && <p>{t[6]}</p>}
         </div>
-        {dictionary?.words.slice(0, 5).map((word, index) => {
+        {dictionary?.words.slice(0, 15).map((word, index) => {
           const id = entryId(word.reading);
-          const meaning = meanings[id];
           const isSaved = saved.some(item => item.id === id);
           return <article className="lookup-result" key={index}>
             <h3 lang="ja">{word.reading.kanji ?? word.reading.kana}</h3>
             {word.reading.kanji && <p lang="ja">{word.reading.kana}</p>}
-            <div className="burmese-meaning" aria-live="polite">
-              <strong>{study[0]}</strong>
-              {meaning ? <p lang="my">{meaning}</p> : <p>{meaning === null ? t[7] : t[8]}</p>}
-            </div>
             <ol lang="en">{word.senses.map((sense, i) => <li key={i}>{sense.glosses.join(", ")}</li>)}</ol>
             <button className="saved-filter" aria-pressed={isSaved} onClick={() => toggleSaved({
               id, kanji: word.reading.kanji ?? word.reading.kana,
-              reading: word.reading.kana, meaning: meaning ?? word.senses[0]?.glosses[0] ?? "",
-            })}>{isSaved ? study[2] : study[1]}</button>
+              reading: word.reading.kana, meaning: word.senses[0]?.glosses[0] ?? "",
+            })}>{isSaved ? study[1] : study[0]}</button>
           </article>;
         })}
         {dictionary?.kanji.slice(0, 10).map(kanji => (
@@ -234,7 +212,7 @@ function Flashcards({ words, language, onRemove }: {
             setPosition(current => (current + 1) % words.length);
             setRevealedId(undefined);
           }}>{t[11]}</button>
-          {" "}<button className="saved-filter" onClick={() => onRemove(word)}>{studyLabels[language][2]}</button>
+          {" "}<button className="saved-filter" onClick={() => onRemove(word)}>{studyLabels[language][1]}</button>
         </>
       ) : <p>{t[12]}</p>}
     </section>

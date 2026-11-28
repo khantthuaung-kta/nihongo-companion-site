@@ -4,8 +4,7 @@ A Japanese dictionary and translation workspace for Burmese-speaking learners, w
 
 ## Features
 
-- Look up Japanese words and kanji with Jotoba.
-- See an automatic Burmese translation of the first English gloss for each of the first five word matches, with the original dictionary senses below.
+- Look up Japanese words and kanji with Jotoba and read the original English definitions.
 - Translate short passages between Japanese and Burmese through MyMemory.
 - Save dictionary results as flashcards and review them in the same browser.
 
@@ -44,4 +43,4 @@ The site uses relative asset paths, so it also works on other free static hosts 
 
 The app runs on GitHub Pages without its own backend, database, Docker image, or API keys. Saved flashcards are stored in browser local storage.
 
-Live dictionary lookups send the submitted query to Jotoba. MyMemory receives the first English gloss of each displayed word and any text submitted to the translator. These services require internet access. MyMemory applies anonymous usage limits and a 500-byte request limit. English definitions remain available if Burmese translation fails. Machine-translated glosses can miss context or alternate meanings.
+Live dictionary lookups send the submitted query to Jotoba. MyMemory receives text submitted through the separate translator. These services require internet access. MyMemory applies anonymous usage limits and a 500-byte request limit.
