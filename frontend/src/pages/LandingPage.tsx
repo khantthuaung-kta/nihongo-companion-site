@@ -1,4 +1,5 @@
 import React from "react";
+import { Flashcards, LookupTools } from "./LookupTools";
 
 type Language = "my" | "en" | "ja" | "th";
 type Category = "all" | "daily" | "travel" | "food" | "study";
@@ -30,9 +31,11 @@ export default function LandingPage(){
   return <main>
     <header className="site-header"><a className="brand" href="#top" aria-label="Nihongo Companion home"><span className="brand-mark">日</span><span>Nihongo<br/><b>Companion</b></span></a><label className="language-picker"><span className="sr-only">Language</span><select value={language} onChange={event=>setLanguage(event.target.value as Language)}>{(Object.keys(copy) as Language[]).map(key=><option key={key} value={key}>{copy[key].label}</option>)}</select></label></header>
     <section className="hero" id="top"><div className="sun" aria-hidden="true"/><div className="hero-copy"><p className="eyebrow">{t.eyebrow}</p><h1>{t.title}</h1><p className="intro">{t.intro}</p></div><div className="hero-kanji" aria-hidden="true"><span>言</span><small>ことば</small></div><div className="wave" aria-hidden="true"/></section>
+    <LookupTools language={language} />
     <section className="library" aria-labelledby="library-title"><div className="section-heading"><div><p className="kicker">言葉帳 · KOTOBA NOTE</p><h2 id="library-title">{t.words}</h2></div><button className={`saved-filter ${savedOnly?"active":""}`} onClick={()=>setSavedOnly(value=>!value)} aria-pressed={savedOnly}><span>♡</span>{t.saved}<b>{saved.length}</b></button></div>
       <div className="search-wrap"><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} placeholder={t.search} aria-label={t.search}/></div><div className="filters" aria-label="Categories">{categories.map(item=><button key={item} className={category===item?"active":""} onClick={()=>setCategory(item)}>{t[item]}</button>)}</div>
       {visibleWords.length?<div className="word-grid">{visibleWords.map(word=>{const isSaved=saved.includes(word.id);return <article className="word-card" key={word.id}><div className="card-top"><span className="category-tag">{t[word.category]}</span><button className={`heart ${isSaved?"active":""}`} onClick={()=>toggleSaved(word.id)} aria-label={isSaved?t.remove:t.save} aria-pressed={isSaved}>♥</button></div><div className="word-title"><div><h3>{word.kanji}</h3><p>{word.reading}</p></div><span>{word.romaji}</span></div><p className="meaning">{word.meaning[language]}</p><div className="example"><small>{t.example}</small><p lang="ja">{word.example}</p><em>{word.exampleReading}</em><p>{word.exampleMeaning[language]}</p></div></article>;})}</div>:<div className="empty"><span>々</span><p>{t.empty}</p></div>}
+      <Flashcards language={language} words={words.filter(word => saved.includes(word.id))} />
     </section><footer><span className="footer-mark">日</span><p>{t.footer}</p><small>Made for curious learners · 2026</small></footer>
   </main>;
 }
